@@ -16,10 +16,10 @@ const bodyParser = require('body-parser');
 
 // Need to serve index.html directly from the route with a specific route for the root URL:
 const path = require('path');
-app.use(express.static('public'));
+app.use('/public', express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, '/index.html'));
 });
 
 // Mount your existing apiRouter below at the '/api' path.
