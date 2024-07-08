@@ -13,6 +13,7 @@ app.use(cors());
 
 // Add middleware for parsing request bodies here:
 const bodyParser = require('body-parser');
+app.use(bodyParser.json())
 
 // Need to serve index.html directly from the route with a specific route for the root URL:
 const path = require('path');

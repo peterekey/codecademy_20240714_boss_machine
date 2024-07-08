@@ -206,7 +206,7 @@ const getFromDatabaseById = (modelType, id) => {
     return null;
   }
   return model.data.find((element) => {
-    return element.id === id;
+    return element.id == id;
   });
 }
 
