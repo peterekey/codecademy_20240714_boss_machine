@@ -206,10 +206,6 @@ const getFromDatabaseById = (modelType, id) => {
     return null;
   }
   return model.data.find((element) => {
-    if(modelType === "minions") {
-      // console.log(model.data);
-      // console.log('-'.repeat(20));
-    }
     return element.id == id;
   });
 }
@@ -222,11 +218,6 @@ const addToDatabase = (modelType, instance) => {
   if (model.isValid(instance)) {
     instance.id = `${model.nextId++}`;
     model.data.push(instance);
-    if(modelType === "minions") {
-      console.log('The model is now:');
-      console.log(model.data);
-      console.log('-'.repeat(20));
-    }
     return model.data[model.data.length - 1];
   }
 }

@@ -3,7 +3,8 @@ const {
     getAllFromDatabase, 
     addToDatabase, 
     getFromDatabaseById, 
-    updateInstanceInDatabase 
+    updateInstanceInDatabase, 
+    deleteFromDatabasebyId
 } = require('./db');
 const minionsRouter = express.Router();
 
@@ -51,6 +52,14 @@ minionsRouter.put('/:minionId', (req, res, next) => {
     res.send(updatedMinion);
 });
 
+// DELETE /api/minions/:minionId to delete a single minion by id.
+minionsRouter.delete('/:minionId', (req, res, next) => {
+    const minionDeleted = deleteFromDatabasebyId('minions', req.minion.id);
+    minionDeleted ? res.status(204) : res.status(500);
+    res.send();
+
+});
+
 // Work router for handling work-related routes
 const workRouter = express.Router({mergeParams: true})
 minionsRouter.use('/:minionId/work', workRouter);
@@ -78,7 +87,7 @@ workRouter.post('/', (req, res, next) => {
     const workToAdd = req.body;
     workToAdd.minionId = req.minion.id;
     const newWork = addToDatabase('work', workToAdd);
-    res.send(201).send(newWork);
+    res.status(201).send(newWork);
 })
 
 
