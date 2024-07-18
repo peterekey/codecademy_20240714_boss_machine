@@ -8,7 +8,7 @@ ideasRouter.param('ideaId', (req, res, next, id) => {
     let ideaId = Number(id);
 
     if (isNaN(ideaId)) {
-        return res.status(400).send('Invalid idea ID');
+        return res.status(404).send('Invalid idea ID');
     }
 
     try {

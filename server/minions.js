@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const { 
     getAllFromDatabase, 
     addToDatabase, 
@@ -8,14 +9,17 @@ const {
 } = require('./db');
 const minionsRouter = express.Router();
 
+// Use logging middleware
+minionsRouter.use(morgan('dev'));
+
 // Do data validation on minionId
 minionsRouter.param('minionId', (req, res, next, id) => {
     let minionId = Number(id);
 
     if (isNaN(minionId)) {
-        return res.status(400).send('Invalid minion ID');
+        return res.status(404).send('Invalid minion ID');
     }
-    
+
     try {
         const found = getFromDatabaseById('minions', minionId);
         if (found) {
@@ -52,7 +56,7 @@ minionsRouter.get('/:minionId', (req, res, next) => {
 
 // PUT /api/minions/:minionId to update a single minion by id.
 minionsRouter.put('/:minionId', (req, res, next) => {
-    const updatedMinion = updateInstanceInDatabase('minion', req.body);
+    const updatedMinion = updateInstanceInDatabase('minions', req.body);
     res.send(updatedMinion);
 });
 
