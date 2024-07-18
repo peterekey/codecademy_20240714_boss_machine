@@ -8,9 +8,14 @@ const {
 } = require('./db');
 const minionsRouter = express.Router();
 
-// Do data validation on minionIDd
+// Do data validation on minionId
 minionsRouter.param('minionId', (req, res, next, id) => {
     let minionId = Number(id);
+
+    if (isNaN(minionId)) {
+        return res.status(400).send('Invalid minion ID');
+    }
+    
     try {
         const found = getFromDatabaseById('minions', minionId);
         if (found) {
@@ -18,7 +23,6 @@ minionsRouter.param('minionId', (req, res, next, id) => {
             next();
         } else {
             res.status(404).send();
-            next(new Error('No minion found with this ID'));
         };
     } catch (err) {
         next(err);
