@@ -33,6 +33,27 @@ minionsRouter.param('minionId', (req, res, next, id) => {
     }
 });
 
+// Do data validation on workId
+minionsRouter.param('workId', (req, res, next, id) => {
+    let workId = Number(id);
+
+    if (isNaN(workId)) {
+        return res.status(404).send('Invalid work ID');
+    }
+
+    try {
+        const found = getFromDatabaseById('work', workId);
+        if (found) {
+            req.work = found;
+            next();
+        } else {
+            res.status(404).send();
+        };
+    } catch (err) {
+        next(err);
+    }
+});
+
 // GET /api/minions to get an array of all minions.
 minionsRouter.get('/', (req, res, next) => {
     const minions = getAllFromDatabase('minions');
@@ -96,7 +117,22 @@ workRouter.post('/', (req, res, next) => {
     workToAdd.minionId = req.minion.id;
     const newWork = addToDatabase('work', workToAdd);
     res.status(201).send(newWork);
+});
+
+// PUT /api/minions/:minionId/work/:workId to update a single work by id.
+workRouter.put('/:workId', (req, res, next) => {
+    if (req.work.minionId !== req.minion.id) {
+        res.status(400).send('A work ID with the wrong minion ID is requested');
+    }
+    const updatedWork = updateInstanceInDatabase('work', req.body);
+    res.send(updatedWork);
 })
 
+// DELETE /api/minions/:minionId/work/:workId to delete a single work by id.
+workRouter.delete('/:workId', (req, res, next) => {
+    const workDeleted = deleteFromDatabasebyId('work', req.work.id);
+    workDeleted ? res.status(204) : res.status(404);
+    res.send();
+})
 
 module.exports = minionsRouter;
